@@ -159,8 +159,7 @@ footer {
 
 /* keep list compact and pretty */
 .participants-list {
-  list-style: disc;
-  list-style-position: inside;
+  list-style: none;
   margin: 0;
   padding: 0;
   max-height: 160px; /* limit height to keep cards compact */
@@ -200,6 +199,25 @@ footer {
   font-weight: 700;
   font-size: 13px;
   box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+}
+
+/* participant name expands to take remaining space */
+.participants-list .name {
+  flex: 1 1 auto;
+}
+
+/* delete button next to each participant */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+}
+.delete-btn:hover {
+  background-color: rgba(198, 40, 40, 0.06);
 }
 
 /* small muted text for metadata (optional) */

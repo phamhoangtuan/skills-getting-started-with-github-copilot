@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Clear loading message
       activitiesList.innerHTML = "";
 
+      // Reset activity select options (keep placeholder)
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
@@ -67,8 +70,43 @@ document.addEventListener("DOMContentLoaded", () => {
             spanName.className = "name";
             spanName.textContent = displayName(p);
 
+            // delete/unregister button
+            const del = document.createElement("button");
+            del.className = "delete-btn";
+            del.setAttribute("aria-label", `Unregister ${displayName(p)}`);
+            del.title = "Unregister";
+            del.textContent = "✖";
+            del.addEventListener("click", async () => {
+              // send unregister request
+              try {
+                const res = await fetch(
+                  `/activities/${encodeURIComponent(name)}/unregister?email=${encodeURIComponent(p)}`,
+                  { method: "POST" }
+                );
+
+                const result = await res.json();
+
+                if (res.ok) {
+                  // refresh activities to update UI
+                  fetchActivities();
+                } else {
+                  messageDiv.textContent = result.detail || "Failed to unregister";
+                  messageDiv.className = "error";
+                  messageDiv.classList.remove("hidden");
+                  setTimeout(() => messageDiv.classList.add("hidden"), 5000);
+                }
+              } catch (err) {
+                console.error("Unregister error:", err);
+                messageDiv.textContent = "Failed to unregister. Please try again.";
+                messageDiv.className = "error";
+                messageDiv.classList.remove("hidden");
+                setTimeout(() => messageDiv.classList.add("hidden"), 5000);
+              }
+            });
+
             li.appendChild(avatar);
             li.appendChild(spanName);
+            li.appendChild(del);
 
             ul.appendChild(li);
           });
@@ -117,6 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        // update activities UI immediately so no refresh is needed
+        fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
