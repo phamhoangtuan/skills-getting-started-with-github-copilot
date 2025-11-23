@@ -142,3 +142,106 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+/* Participants section (new) */
+.participants {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
+}
+
+.participants h5 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #1a237e;
+  font-weight: 600;
+}
+
+/* keep list compact and pretty */
+.participants-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 160px; /* limit height to keep cards compact */
+  overflow: auto;
+}
+
+/* individual participant */
+.participants-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  transition: background-color 0.15s;
+  background-color: rgba(26, 35, 126, 0.02);
+  font-size: 14px;
+  color: #333;
+}
+
+/* hover for clarity */
+.participants-list li:hover {
+  background-color: rgba(57, 73, 171, 0.06);
+}
+
+/* circular avatar with initials */
+.participants-list .avatar {
+  flex: 0 0 34px;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  background-color: #e8eaf6;
+  color: #1a237e;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+}
+
+/* participant name expands to take remaining space */
+.participants-list .name {
+  flex: 1 1 auto;
+}
+
+/* delete button next to each participant */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+}
+.delete-btn:hover {
+  background-color: rgba(198, 40, 40, 0.06);
+}
+
+/* small muted text for metadata (optional) */
+.participants-list .meta {
+  font-size: 12px;
+  color: #666;
+  margin-left: auto;
+}
+
+/* empty state */
+.participants .no-participants {
+  font-size: 13px;
+  color: #666;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+/* ensure scrollbar is subtle */
+.participants-list::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.participants-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.08);
+  border-radius: 3px;
+}
