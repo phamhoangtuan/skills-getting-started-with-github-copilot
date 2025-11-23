@@ -4,7 +4,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
-  // Function to fetch activities from API
+  // helper: derive initials from a name or email
+  function getInitials(text) {
+    if (!text) return "";
+    const core = text.includes("@") ? text.split("@")[0] : text;
+    const parts = core.split(/[.\s_-]+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  // helper: display-friendly name (use local-part of email when needed)
+  function displayName(text) {
+    if (!text) return "";
+    if (text.includes("@")) return text.split("@")[0];
+    return text;
+  }
+
+  // Function to fetch activities from API (replaced to include participants UI)
   async function fetchActivities() {
     try {
       const response = await fetch("/activities");
@@ -20,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // basic info
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
@@ -27,6 +44,44 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
 
+        // participants section
+        const participantsDiv = document.createElement("div");
+        participantsDiv.className = "participants";
+        participantsDiv.setAttribute("aria-label", "Participants");
+        const heading = document.createElement("h5");
+        heading.textContent = "Participants";
+        participantsDiv.appendChild(heading);
+
+        if (details.participants && details.participants.length > 0) {
+          const ul = document.createElement("ul");
+          ul.className = "participants-list";
+
+          details.participants.forEach((p) => {
+            const li = document.createElement("li");
+
+            const avatar = document.createElement("span");
+            avatar.className = "avatar";
+            avatar.textContent = getInitials(p);
+
+            const spanName = document.createElement("span");
+            spanName.className = "name";
+            spanName.textContent = displayName(p);
+
+            li.appendChild(avatar);
+            li.appendChild(spanName);
+
+            ul.appendChild(li);
+          });
+
+          participantsDiv.appendChild(ul);
+        } else {
+          const none = document.createElement("div");
+          none.className = "no-participants";
+          none.textContent = "No participants yet — be the first to sign up!";
+          participantsDiv.appendChild(none);
+        }
+
+        activityCard.appendChild(participantsDiv);
         activitiesList.appendChild(activityCard);
 
         // Add option to select dropdown
